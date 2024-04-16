@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:euc/euc.dart';
+import 'package:euc/jis.dart';
 import 'package:fetch_link_data/src/models/link_data.dart';
 import 'package:html/parser.dart' as parser;
 import 'package:http/http.dart' as http;
@@ -127,6 +128,9 @@ Encoding encodingForCharset(String? charset, [Encoding fallback = latin1]) {
   if (encoding == null) {
     if (charset.toLowerCase() == 'euc-jp') {
       return EucJP();
+    }
+    if (charset == 'Shift_JIS') {
+      return ShiftJIS();
     }
   }
   return encoding ?? fallback;
