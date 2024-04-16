@@ -8,8 +8,9 @@ environment:
 
 # Add regular dependencies here.
 dependencies:
-  # path: ^1.8.0
+  euc: ^1.0.6
   http: ^1.1.0
+  http_parser: ^4.0.0
   html: ^0.15.4
 
 dev_dependencies:

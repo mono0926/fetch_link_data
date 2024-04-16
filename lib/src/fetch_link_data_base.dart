@@ -1,8 +1,10 @@
 import 'dart:convert';
 
+import 'package:euc/euc.dart';
 import 'package:fetch_link_data/src/models/link_data.dart';
-import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
+import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 
 class FetchLinkData {
   /// this function for getting all the possible URL content
@@ -13,7 +15,8 @@ class FetchLinkData {
     try {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
-        final document = parser.parse(response.body);
+        final document = parser.parse(
+            _encodingForHeaders(response.headers).decode(response.bodyBytes));
         final metaTags = document.getElementsByTagName('meta');
         for (var tag in metaTags) {
           final property = tag.attributes['property'];
@@ -113,4 +116,24 @@ class FetchLinkData {
     );
     return jsonDecode(result.body)['thumbnail_url'];
   }
+}
+
+Encoding _encodingForHeaders(Map<String, String> headers) =>
+    encodingForCharset(_contentTypeForHeaders(headers).parameters['charset']);
+
+Encoding encodingForCharset(String? charset, [Encoding fallback = latin1]) {
+  if (charset == null) return fallback;
+  final encoding = Encoding.getByName(charset);
+  if (encoding == null) {
+    if (charset.toLowerCase() == 'euc-jp') {
+      return EucJP();
+    }
+  }
+  return encoding ?? fallback;
+}
+
+MediaType _contentTypeForHeaders(Map<String, String> headers) {
+  var contentType = headers['content-type'];
+  if (contentType != null) return MediaType.parse(contentType);
+  return MediaType('application', 'octet-stream');
 }
