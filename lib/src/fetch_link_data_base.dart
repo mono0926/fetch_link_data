@@ -16,7 +16,9 @@ class FetchLinkData {
     try {
       final response = await http.get(Uri.parse(url), headers: {
         'User-Agent':
-            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+        'Cookie':
+            'bPzd=ghid001%3D001020014%2C001020014%2C001020014%2C001020014%2C001020014%3Aghid%3D001020014%2C001020014%2C001020014%2C001020014%2C001020014'
       });
       if (response.statusCode == 200) {
         final document = parser.parse(
